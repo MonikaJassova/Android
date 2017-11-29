@@ -1,15 +1,19 @@
-package sk.akademiasovy.monikajassova.jedalnylistok.Model;
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
+
+import java.util.List;
 
 /**
  * Created by monika.jassova on 11/28/2017.
  */
 
-public class Addon {
+public class Meal {
     private String id;
-    private Category category;
     private String name;
+    private Object photo;
+    private CategoryMeal category;
     private ServingSize servingSize;
     private String description;
+    private List<String> addOnIds;
     private Integer displaySeq;
 
     public String getId() {
@@ -20,20 +24,28 @@ public class Addon {
         this.id = id;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(final Category category) {
-        this.category = category;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public Object getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(final Object photo) {
+        this.photo = photo;
+    }
+
+    public CategoryMeal getCategory() {
+        return category;
+    }
+
+    public void setCategory(final CategoryMeal category) {
+        this.category = category;
     }
 
     public ServingSize getServingSize() {
@@ -50,6 +62,14 @@ public class Addon {
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    public List<String> getAddOnIds() {
+        return addOnIds;
+    }
+
+    public void setAddOnIds(final List<String> addOnIds) {
+        this.addOnIds = addOnIds;
     }
 
     public Integer getDisplaySeq() {

@@ -1,15 +1,17 @@
-package sk.akademiasovy.monikajassova.jedalnylistok.Model;
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model2;
 
 import java.util.List;
 
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.CategoryMeal;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.ServingSize;
+
 /**
- * Created by monika.jassova on 11/28/2017.
+ * Created by monika.jassova on 11/29/2017.
  */
 
-public class Meal {
+public class Mealm {
     private String id;
     private String name;
-    private Object photo;
     private CategoryMeal category;
     private ServingSize servingSize;
     private String description;
@@ -20,7 +22,7 @@ public class Meal {
         return id;
     }
 
-    public void setId(final String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -28,23 +30,15 @@ public class Meal {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
-    }
-
-    public Object getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(final Object photo) {
-        this.photo = photo;
     }
 
     public CategoryMeal getCategory() {
         return category;
     }
 
-    public void setCategory(final CategoryMeal category) {
+    public void setCategory(CategoryMeal category) {
         this.category = category;
     }
 
@@ -52,7 +46,7 @@ public class Meal {
         return servingSize;
     }
 
-    public void setServingSize(final ServingSize servingSize) {
+    public void setServingSize(ServingSize servingSize) {
         this.servingSize = servingSize;
     }
 
@@ -60,7 +54,7 @@ public class Meal {
         return description;
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -68,7 +62,7 @@ public class Meal {
         return addOnIds;
     }
 
-    public void setAddOnIds(final List<String> addOnIds) {
+    public void setAddOnIds(List<String> addOnIds) {
         this.addOnIds = addOnIds;
     }
 
@@ -76,7 +70,7 @@ public class Meal {
         return displaySeq;
     }
 
-    public void setDisplaySeq(final Integer displaySeq) {
+    public void setDisplaySeq(Integer displaySeq) {
         this.displaySeq = displaySeq;
     }
 }

@@ -1,4 +1,4 @@
-package sk.akademiasovy.monikajassova.jedalnylistok.Model;
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
 /**
  * Created by monika.jassova on 11/28/2017.
