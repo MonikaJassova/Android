@@ -1,0 +1,27 @@
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model2;
+
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+
+import java.util.List;
+
+/**
+ * Created by monika.jassova on 11/29/2017.
+ */
+
+@Dao
+public interface MealCategoryDAO {
+    // Returns a list of all mealcategories in the database
+    @Query("SELECT * FROM mealcategories")
+    List<MealCategory> getAll();
+
+    @Query("SELECT * FROM mealcategories WHERE id LIKE :id")
+    MealCategory findById(String id);
+
+    // Inserts multiple mealcategories
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(MealCategory... mealCategories);
+}

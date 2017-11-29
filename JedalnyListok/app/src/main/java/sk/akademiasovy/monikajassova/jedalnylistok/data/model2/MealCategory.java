@@ -1,5 +1,10 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.data.model2;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Meal;
@@ -9,18 +14,32 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Packaging;
  * Created by monika.jassova on 11/29/2017.
  */
 
+@Entity(tableName = "mealcategories")
 public class MealCategory {
+    @PrimaryKey
+    @NonNull
     private String id;
     private String name;
+    @Ignore
     private List<Meal> meals;
+    @Ignore
     private Packaging packaging;
+    @Ignore
     private String description;
+    @Ignore
     private Integer displaySeq;
 
+    @Ignore
     public MealCategory(){
 
     }
 
+    public MealCategory(String id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
+    @Ignore
     public MealCategory(String id, String name, List<Meal> meals, Packaging packaging, String description, Integer displaySeq) {
         this.id = id;
         this.name = name;
