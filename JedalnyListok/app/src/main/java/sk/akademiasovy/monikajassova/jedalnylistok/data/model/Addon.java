@@ -28,10 +28,22 @@ public class Addon {
     @Ignore
     private Integer displaySeq;
 
+    public Addon(){
+
+    }
+
     public Addon(String id, String name) {
         this.id = id;
         this.name = name;
         this.categoryId = category.getId();
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getId() {

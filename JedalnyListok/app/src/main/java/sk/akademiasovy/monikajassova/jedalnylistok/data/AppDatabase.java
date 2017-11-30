@@ -11,6 +11,7 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.AddOnCategoryDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.DBTypeConverter;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealCategory;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealCategoryDAO;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealWithAddonsDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.Mealm;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealmDAO;
 
@@ -24,6 +25,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract MealCategoryDAO mealCategoryDAO();
     public abstract MealmDAO mealmDAO();
     public abstract AddOnCategoryDAO addOnCategoryDAO();
+    public abstract MealWithAddonsDAO mealWithAddonsDAO();
 
 
     private static final String DATABASE_NAME = "jedalnylistok";

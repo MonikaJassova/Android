@@ -34,6 +34,10 @@ public class Mealm {
     @Ignore
     private Integer displaySeq;
 
+    public Mealm(){
+
+    }
+
     public String getCategoryId() {
         return categoryId;
     }

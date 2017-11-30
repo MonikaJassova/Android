@@ -19,10 +19,10 @@ public interface AddOnCategoryDAO {
     @Query("SELECT * FROM addoncategories WHERE id LIKE :id")
     List<AddOnCategory> findByMealId(String id);
 
-    @Query("SELECT * FROM addoncategories " +
-            "INNER JOIN meals ON Loan.book_id == Book.id " +
-            "WHERE Loan.user_id == :userId ")
-    List<AddOnCategory> findByMealId2(String id);
+//    @Query("SELECT * FROM addoncategories " +
+//            "INNER JOIN meals ON Loan.book_id == Book.id " +
+//            "WHERE Loan.user_id == :userId ")
+//    List<AddOnCategory> findByMealId2(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(AddOnCategory... addOnCategories);

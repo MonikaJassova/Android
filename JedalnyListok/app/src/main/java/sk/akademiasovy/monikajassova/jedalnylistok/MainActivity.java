@@ -2,9 +2,11 @@ package sk.akademiasovy.monikajassova.jedalnylistok;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -26,24 +28,35 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.MealService;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView result;
     private static final String TAG = "hlavna";
+
     private AddonCategoryService addonCategoryService;
     private MealCategoryService mealCategoryService;
     private AddonService addonService;
     private MealService mealService;
+
+    private RecyclerView recyclerView;
+    private MealCategoryAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        result = (TextView) findViewById(R.id.result);
+        recyclerView = (RecyclerView) findViewById(R.id.mealcategory_recyclerview);
+        mAdapter = new MealCategoryAdapter(new ArrayList<MealCategory>(0), R.layout.row_layout, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setHasFixedSize(true);
 
-        fetchAddOnCategories();
         fetchMealCategories();
+        fetchAddOnCategories();
         fetchAddons();
         fetchMeals();
+
+//        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+//                AppDatabase.class, "populus-database").build();
+//
 
     }
 
@@ -119,14 +132,7 @@ public class MainActivity extends AppCompatActivity {
         call2.enqueue(new Callback<MealCategoriesResponse>() {
             @Override
             public void onResponse(Call<MealCategoriesResponse> call, Response<MealCategoriesResponse> response) {
-                List<MealCategory> mealCategories = response.body().getMealCategories();
-                Log.i(TAG, "Nummber of meal categories received: " + mealCategories.size());
-                int length = mealCategories.size();
-                Log.i(TAG, "version "+response.body().getVersion());
-                Log.i(TAG, "addonId "+mealCategories.get(1).getMeals().get(0).getAddOnIds().get(0));
-                for (int i = 0; i < length; i++) {
-                    Log.i(TAG, mealCategories.get(i).getName());
-                }
+                mAdapter.updateAnswers(response.body().getMealCategories());
             }
 
             @Override
