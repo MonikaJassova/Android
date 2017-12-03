@@ -1,4 +1,4 @@
-package sk.akademiasovy.monikajassova.jedalnylistok;
+package sk.akademiasovy.monikajassova.jedalnylistok.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import sk.akademiasovy.monikajassova.jedalnylistok.R;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Addon;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.AddOnCategoriesResponse;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.AddOnCategory;
@@ -26,6 +27,8 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.ApiUtils;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.MealCategoryService;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.MealService;
 
+import static sk.akademiasovy.monikajassova.jedalnylistok.ui.MealCategoryDataFactory.makeMealCategories;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "hlavna";
@@ -38,16 +41,26 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MealCategoryAdapter mAdapter;
 
+    private MealCategoryExAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = (RecyclerView) findViewById(R.id.mealcategory_recyclerview);
-        mAdapter = new MealCategoryAdapter(new ArrayList<MealCategory>(0), R.layout.row_layout, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setHasFixedSize(true);
+//        recyclerView = (RecyclerView) findViewById(R.id.mealcategory_recyclerview);
+//        mAdapter = new MealCategoryAdapter(new ArrayList<MealCategory>(0), R.layout.row_layout, this);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setAdapter(mAdapter);
+//        recyclerView.setHasFixedSize(true);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.mealcategory_recyclerview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+        //instantiate your adapter with the list of genres
+        adapter = new MealCategoryExAdapter(makeMealCategories());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
         fetchMealCategories();
         fetchAddOnCategories();
@@ -140,5 +153,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, t.toString());
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        adapter.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        adapter.onRestoreInstanceState(savedInstanceState);
     }
 }

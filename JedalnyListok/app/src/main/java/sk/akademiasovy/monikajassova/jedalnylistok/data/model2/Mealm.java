@@ -5,8 +5,11 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.CategoryMeal;
@@ -17,7 +20,7 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.model.ServingSize;
  */
 
 @Entity(tableName = "meals", foreignKeys = @ForeignKey(entity = MealCategory.class, parentColumns = "id", childColumns = "categoryId"))
-public class Mealm {
+public class Mealm implements Parcelable {
     @PrimaryKey
     @NonNull
     private String id;
@@ -46,10 +49,11 @@ public class Mealm {
         this.categoryId = categoryId;
     }
 
-    public Mealm (String id, String name, ServingSize servingSize){
+    public Mealm (String id, String name, ServingSize servingSize, CategoryMeal category){
         this.id = id;
         this.name = name;
         this.servingSize = servingSize;
+        this.category = category;
         this.categoryId = category.getId();
     }
 
@@ -108,4 +112,49 @@ public class Mealm {
     public void setDisplaySeq(Integer displaySeq) {
         this.displaySeq = displaySeq;
     }
+
+    protected Mealm(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        categoryId = in.readString();
+        servingSize = (ServingSize) in.readValue(ServingSize.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            addOnIds = new ArrayList<String>();
+            in.readList(addOnIds, String.class.getClassLoader());
+        } else {
+            addOnIds = null;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(categoryId);
+        dest.writeValue(servingSize);
+        if (addOnIds == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(addOnIds);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Mealm> CREATOR = new Parcelable.Creator<Mealm>() {
+        @Override
+        public Mealm createFromParcel(Parcel in) {
+            return new Mealm(in);
+        }
+
+        @Override
+        public Mealm[] newArray(int size) {
+            return new Mealm[size];
+        }
+    };
 }
