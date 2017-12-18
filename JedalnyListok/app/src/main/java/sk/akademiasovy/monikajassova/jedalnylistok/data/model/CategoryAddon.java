@@ -1,14 +1,20 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
+import android.arch.persistence.room.Ignore;
+
 /**
  * Created by monika.jassova on 12/18/2017.
  */
 
 public class CategoryAddon {
     private String id;
+    @Ignore
     private String name;
+    @Ignore
     private String description;
+    @Ignore
     private SelectionOption selectionOption;
+    @Ignore
     private Integer displaySeq;
 
     public String getId() {

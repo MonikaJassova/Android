@@ -1,5 +1,6 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.ui;
 
+import android.arch.persistence.room.Room;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,13 +13,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import sk.akademiasovy.monikajassova.jedalnylistok.R;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Addon;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnCategoriesResponse;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnCategory;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnsResponse;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoriesResponse;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Meal;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealsResponse;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.AppDatabase;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.*;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.AddonCategoryService;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.AddonService;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.ApiUtils;
@@ -41,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MealCategoryExAdapter adapter;
 
+    private AppDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,19 +54,23 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.mealcategory_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
+        db = AppDatabase.getInstance(getApplicationContext());
+
         //instantiate your adapter with the list of genres
         adapter = new MealCategoryExAdapter(makeMealCategories());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         fetchMealCategories();
-        fetchAddOnCategories();
-        fetchAddons();
-        fetchMeals();
+//        fetchAddOnCategories();
+//        fetchAddons();
+//        fetchMeals();
 
-//        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-//                AppDatabase.class, "populus-database").build();
-//
+
+        List<sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory> mealCategories = db.mealCategoryDAO().getAll();
+        for (MealCategory mc : mealCategories) {
+            Log.i(TAG, "MC z DB: "+mc.getName());
+        }
 
     }
 
@@ -143,7 +146,9 @@ public class MainActivity extends AppCompatActivity {
         call2.enqueue(new Callback<MealCategoriesResponse>() {
             @Override
             public void onResponse(Call<MealCategoriesResponse> call, Response<MealCategoriesResponse> response) {
-                mAdapter.updateAnswers(response.body().getMealCategories());
+                List<MealCategory> mc = response.body().getMealCategories();
+//                mAdapter.updateAnswers(mc);
+                db.mealCategoryDAO().insertAll(mc);
             }
 
             @Override

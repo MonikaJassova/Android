@@ -16,6 +16,8 @@ public class ServingSize implements Parcelable {
         this.price = price;
     }
 
+    public ServingSize(){}
+
     public String getSize() {
         return size;
     }

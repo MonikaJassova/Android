@@ -9,6 +9,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class Meal implements Parcelable {
     @NonNull
     private String id;
     private String name;
+    @JsonIgnore
     private String categoryId;
     @Ignore
     private CategoryMeal category;
