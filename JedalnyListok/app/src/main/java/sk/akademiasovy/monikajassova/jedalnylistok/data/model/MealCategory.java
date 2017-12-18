@@ -1,46 +1,49 @@
-package sk.akademiasovy.monikajassova.jedalnylistok.data.model2;
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.SelectionOption;
+import java.util.List;
 
 /**
  * Created by monika.jassova on 11/29/2017.
  */
 
-@Entity(tableName = "addoncategories")
-public class AddOnCategory {
+@Entity(tableName = "mealcategories")
+public class MealCategory {
     @PrimaryKey
     @NonNull
     private String id;
     private String name;
     @Ignore
+    private List<MealCategoryMeal> meals;
+    @Ignore
+    private Packaging packaging;
+    @Ignore
     private String description;
     @Ignore
     private Integer displaySeq;
-    @Ignore
-    private SelectionOption selectionOption;
 
-    public AddOnCategory(String id, String name){
+    @Ignore
+    public MealCategory(){
+
+    }
+
+    public MealCategory(String id, String name){
         this.id = id;
         this.name = name;
     }
 
     @Ignore
-    public AddOnCategory(String id, String name, String description, Integer displaySeq, SelectionOption selectionOption) {
+    public MealCategory(String id, String name, List<MealCategoryMeal> meals, Packaging packaging, String description, Integer displaySeq) {
         this.id = id;
         this.name = name;
+        this.meals = meals;
+        this.packaging = packaging;
         this.description = description;
         this.displaySeq = displaySeq;
-        this.selectionOption = selectionOption;
-    }
-
-    @Ignore
-    public AddOnCategory(){
-
     }
 
     public String getId() {
@@ -59,6 +62,22 @@ public class AddOnCategory {
         this.name = name;
     }
 
+    public List<MealCategoryMeal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<MealCategoryMeal> meals) {
+        this.meals = meals;
+    }
+
+    public Packaging getPackaging() {
+        return packaging;
+    }
+
+    public void setPackaging(Packaging packaging) {
+        this.packaging = packaging;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -73,13 +92,5 @@ public class AddOnCategory {
 
     public void setDisplaySeq(Integer displaySeq) {
         this.displaySeq = displaySeq;
-    }
-
-    public SelectionOption getSelectionOption() {
-        return selectionOption;
-    }
-
-    public void setSelectionOption(SelectionOption selectionOption) {
-        this.selectionOption = selectionOption;
     }
 }

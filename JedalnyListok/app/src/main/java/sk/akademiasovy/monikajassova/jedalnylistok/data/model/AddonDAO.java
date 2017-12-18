@@ -7,8 +7,6 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.Mealm;
-
 /**
  * Created by monika.jassova on 11/29/2017.
  */
@@ -21,11 +19,11 @@ public interface AddonDAO {
     @Query("SELECT * FROM addons WHERE id LIKE :id")
     Addon findById(String id);
 
-    @Query("SELECT * FROM addons WHERE categoryId LIKE :id")
+    @Query("SELECT * FROM addons WHERE categoryid LIKE :id")
     List<Addon> findByCategoryId(String id);
 
-    @Query("SELECT * FROM addons WHERE LIKE :id")
-    List<Addon> findByMealId(String id);
+//    @Query("SELECT * FROM addons WHERE LIKE :id")
+//    List<Addon> findByMealId(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Addon... addons);

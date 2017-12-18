@@ -6,24 +6,24 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.AddOnCategory;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.AddOnCategoryDAO;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.DBTypeConverter;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealCategory;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealCategoryDAO;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealWithAddonsDAO;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.Mealm;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealmDAO;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnCategory;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnCategoryDAO;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.DBTypeConverter;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryDAO;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealWithAddonsDAO;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Meal;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealDAO;
 
 /**
  * Created by monika.jassova on 11/29/2017.
  */
 
-@Database(entities = {MealCategory.class, Mealm.class, AddOnCategory.class}, version = 1) //Entities listed here
+@Database(entities = {MealCategory.class, Meal.class, AddOnCategory.class}, version = 1) //Entities listed here
 @TypeConverters(DBTypeConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract MealCategoryDAO mealCategoryDAO();
-    public abstract MealmDAO mealmDAO();
+    public abstract MealDAO mealmDAO();
     public abstract AddOnCategoryDAO addOnCategoryDAO();
     public abstract MealWithAddonsDAO mealWithAddonsDAO();
 

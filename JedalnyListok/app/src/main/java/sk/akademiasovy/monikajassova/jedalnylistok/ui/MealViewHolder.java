@@ -6,7 +6,6 @@ import android.widget.TextView;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.R;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.Mealm;
 
 /**
  * Created by monika.jassova on 12/1/2017.

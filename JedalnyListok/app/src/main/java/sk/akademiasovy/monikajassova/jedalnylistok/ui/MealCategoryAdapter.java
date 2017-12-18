@@ -11,7 +11,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.R;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealCategory;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
 
 /**
  * Created by monika.jassova on 11/30/2017.

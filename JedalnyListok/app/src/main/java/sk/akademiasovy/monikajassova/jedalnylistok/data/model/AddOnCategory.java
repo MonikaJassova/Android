@@ -1,52 +1,46 @@
-package sk.akademiasovy.monikajassova.jedalnylistok.data.model2;
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.List;
-
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Meal;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Packaging;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.SelectionOption;
 
 /**
  * Created by monika.jassova on 11/29/2017.
  */
 
-@Entity(tableName = "mealcategories")
-public class MealCategory {
+@Entity(tableName = "addoncategories")
+public class AddOnCategory {
     @PrimaryKey
     @NonNull
     private String id;
     private String name;
     @Ignore
-    private List<Meal> meals;
-    @Ignore
-    private Packaging packaging;
-    @Ignore
     private String description;
     @Ignore
     private Integer displaySeq;
-
     @Ignore
-    public MealCategory(){
+    private SelectionOption selectionOption;
 
-    }
-
-    public MealCategory(String id, String name){
+    public AddOnCategory(String id, String name){
         this.id = id;
         this.name = name;
     }
 
     @Ignore
-    public MealCategory(String id, String name, List<Meal> meals, Packaging packaging, String description, Integer displaySeq) {
+    public AddOnCategory(String id, String name, String description, Integer displaySeq, SelectionOption selectionOption) {
         this.id = id;
         this.name = name;
-        this.meals = meals;
-        this.packaging = packaging;
         this.description = description;
         this.displaySeq = displaySeq;
+        this.selectionOption = selectionOption;
+    }
+
+    @Ignore
+    public AddOnCategory(){
+
     }
 
     public String getId() {
@@ -65,22 +59,6 @@ public class MealCategory {
         this.name = name;
     }
 
-    public List<Meal> getMeals() {
-        return meals;
-    }
-
-    public void setMeals(List<Meal> meals) {
-        this.meals = meals;
-    }
-
-    public Packaging getPackaging() {
-        return packaging;
-    }
-
-    public void setPackaging(Packaging packaging) {
-        this.packaging = packaging;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -95,5 +73,13 @@ public class MealCategory {
 
     public void setDisplaySeq(Integer displaySeq) {
         this.displaySeq = displaySeq;
+    }
+
+    public SelectionOption getSelectionOption() {
+        return selectionOption;
+    }
+
+    public void setSelectionOption(SelectionOption selectionOption) {
+        this.selectionOption = selectionOption;
     }
 }

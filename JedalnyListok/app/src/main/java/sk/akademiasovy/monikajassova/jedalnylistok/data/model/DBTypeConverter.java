@@ -1,4 +1,4 @@
-package sk.akademiasovy.monikajassova.jedalnylistok.data.model2;
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
 import android.arch.persistence.room.TypeConverter;
 

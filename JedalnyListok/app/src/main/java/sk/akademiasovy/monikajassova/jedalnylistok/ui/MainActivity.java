@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -14,13 +13,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import sk.akademiasovy.monikajassova.jedalnylistok.R;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Addon;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.AddOnCategoriesResponse;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.AddOnCategory;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.AddOnsResponse;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealCategoriesResponse;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealCategory;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.Mealm;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.MealsResponse;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnCategoriesResponse;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnCategory;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnsResponse;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoriesResponse;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Meal;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealsResponse;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.AddonCategoryService;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.AddonService;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.ApiUtils;
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<MealsResponse>() {
             @Override
             public void onResponse(Call<MealsResponse> call, Response<MealsResponse> response) {
-                List<Mealm> meals = response.body().getMeals();
+                List<Meal> meals = response.body().getMeals();
                 Log.i(TAG, "Nummber of meals received: " + meals.size());
                 int length = meals.size();
                 Log.i(TAG, "version "+response.body().getVersion());

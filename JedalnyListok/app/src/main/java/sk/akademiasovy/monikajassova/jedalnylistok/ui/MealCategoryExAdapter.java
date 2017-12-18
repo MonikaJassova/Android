@@ -10,7 +10,7 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import java.util.List;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.R;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model2.Mealm;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Meal;
 
 /**
  * Created by monika.jassova on 12/1/2017.
@@ -35,7 +35,7 @@ public class MealCategoryExAdapter extends ExpandableRecyclerViewAdapter<MealCat
 
     @Override
     public void onBindChildViewHolder(MealViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
-        final Mealm meal = ((MealCategory) group).getItems().get(childIndex);
+        final Meal meal = ((MealCategory) group).getItems().get(childIndex);
         holder.setMealName(meal.getName());
     }
 

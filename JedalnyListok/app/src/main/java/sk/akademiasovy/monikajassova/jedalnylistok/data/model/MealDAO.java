@@ -1,4 +1,4 @@
-package sk.akademiasovy.monikajassova.jedalnylistok.data.model2;
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
@@ -12,16 +12,16 @@ import java.util.List;
  */
 
 @Dao
-public interface MealmDAO {
+public interface MealDAO {
     @Query("SELECT * FROM meals")
-    List<Mealm> getAll();
+    List<Meal> getAll();
 
     @Query("SELECT * FROM meals WHERE id LIKE :id")
-    Mealm findById(String id);
+    Meal findById(String id);
 
     @Query("SELECT * FROM meals WHERE categoryId LIKE :id")
-    List<Mealm> findByCategoryId(String id);
+    List<Meal> findByCategoryId(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(Mealm... mealms);
+    void insertAll(Meal... meals);
 }

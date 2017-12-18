@@ -1,4 +1,4 @@
-package sk.akademiasovy.monikajassova.jedalnylistok.data.model2;
+package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MealsResponse {
     private int version;
-    private List<Mealm> meals;
+    private List<Meal> meals;
 
     public int getVersion() {
         return version;
@@ -18,11 +18,11 @@ public class MealsResponse {
         this.version = version;
     }
 
-    public List<Mealm> getMeals() {
+    public List<Meal> getMeals() {
         return meals;
     }
 
-    public void setMeals(List<Mealm> meals) {
+    public void setMeals(List<Meal> meals) {
         this.meals = meals;
     }
 }
