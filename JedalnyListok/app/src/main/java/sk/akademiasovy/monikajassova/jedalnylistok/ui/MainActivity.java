@@ -1,17 +1,21 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.ui;
 
-import android.arch.persistence.room.Room;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import sk.akademiasovy.monikajassova.jedalnylistok.InjectorUtils;
 import sk.akademiasovy.monikajassova.jedalnylistok.R;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.AppDatabase;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.*;
@@ -22,9 +26,7 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.ApiUtils;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.MealCategoryService;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.MealService;
 
-import static sk.akademiasovy.monikajassova.jedalnylistok.ui.MealCategoryDataFactory.makeMealCategories;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MealCategoryPersAdapter.MealCategoryPersAdapterOnItemClickHandler{
 
     private static final String TAG = "hlavna";
 
@@ -35,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MealCategoryAdapter mAdapter;
+
+    private ProgressBar mLoadingIndicator;
+    private MealCategoryPersAdapter mForecastAdapter;
+    private RecyclerView mRecyclerView;
+    private int mPosition = RecyclerView.NO_POSITION;
+    private MainActivityViewModel mViewModel;
 
     private MealCategoryExAdapter adapter;
 
@@ -51,15 +59,37 @@ public class MainActivity extends AppCompatActivity {
 //        recyclerView.setAdapter(mAdapter);
 //        recyclerView.setHasFixedSize(true);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.mealcategory_recyclerview);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mRecyclerView = findViewById(R.id.mealcategory_recyclerview);
+
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mForecastAdapter = new MealCategoryPersAdapter(this, this);
+
+        /* Setting the adapter attaches it to the RecyclerView in our layout. */
+        mRecyclerView.setAdapter(mForecastAdapter);
+        MainViewModelFactory factory = InjectorUtils.provideMainActivityViewModelFactory(this.getApplicationContext());
+        mViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
+
+        mViewModel.getMealCategories().observe(this, mealCategories -> {
+            mForecastAdapter.swapMealCategories(mealCategories);
+            if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+            mRecyclerView.smoothScrollToPosition(mPosition);
+
+            // Show the weather list or the loading screen based on whether the forecast data exists
+            // and is loaded
+            if (mealCategories != null && mealCategories.size() != 0) showMealCategoryDataView();
+            else showLoading();
+        });
+
+
+        /*RecyclerView recyclerView = (RecyclerView) findViewById(R.id.mealcategory_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         db = AppDatabase.getInstance(getApplicationContext());
-
-        //instantiate your adapter with the list of genres
-        adapter = new MealCategoryExAdapter(makeMealCategories());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
 
         fetchMealCategories();
 //        fetchAddOnCategories();
@@ -68,9 +98,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         List<sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory> mealCategories = db.mealCategoryDAO().getAll();
+        List<sk.akademiasovy.monikajassova.jedalnylistok.ui.MealCategory> mcUI = new ArrayList<>();
+        int i = 0;
         for (MealCategory mc : mealCategories) {
-            Log.i(TAG, "MC z DB: "+mc.getName());
+//            Log.i(TAG, "MC z DB: "+mc.getName());
+//            Log.i(TAG, "Meal z DB: "+mc.getMeals().get(0).getName());
+            mcUI.add(i, new sk.akademiasovy.monikajassova.jedalnylistok.ui.MealCategory(mc));
+            i++;
         }
+
+        //instantiate your adapter with the list of genres
+        adapter = new MealCategoryExAdapter(mcUI);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);*/
 
     }
 
@@ -168,5 +208,40 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         adapter.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onItemClick(String id) {
+        Intent mealDetailIntent = new Intent(MainActivity.this, MealActivity.class);
+        mealDetailIntent.putExtra(MealActivity.MEAL_ID_EXTRA, id);
+        startActivity(mealDetailIntent);
+    }
+
+    /**
+     * This method will make the View for the weather data visible and hide the error message and
+     * loading indicator.
+     * <p>
+     * Since it is okay to redundantly set the visibility of a View, we don't need to check whether
+     * each view is currently visible or invisible.
+     */
+    private void showMealCategoryDataView() {
+        // First, hide the loading indicator
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        // Finally, make sure the weather data is visible
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * This method will make the loading indicator visible and hide the weather View and error
+     * message.
+     * <p>
+     * Since it is okay to redundantly set the visibility of a View, we don't need to check whether
+     * each view is currently visible or invisible.
+     */
+    private void showLoading() {
+        // Then, hide the weather data
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        // Finally, show the loading indicator
+        mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 }

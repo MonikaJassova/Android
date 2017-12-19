@@ -1,5 +1,6 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -15,7 +16,7 @@ import java.util.List;
 public interface MealCategoryDAO {
     // Returns a list of all mealcategories in the database
     @Query("SELECT * FROM mealcategories")
-    List<MealCategory> getAll();
+    LiveData<List<MealCategory>> getAll();
 
     @Query("SELECT * FROM mealcategories WHERE id LIKE :id")
     MealCategory findById(String id);

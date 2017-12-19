@@ -1,12 +1,16 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by monika.jassova on 11/28/2017.
  */
 
-public class MealCategoryMeal {
+public class MealCategoryMeal implements Parcelable {
     private String id;
     private String name;
     private Object photo;
@@ -15,6 +19,8 @@ public class MealCategoryMeal {
     private String description;
     private List<String> addOnIds;
     private Integer displaySeq;
+
+    public MealCategoryMeal(){}
 
     public String getId() {
         return id;
@@ -79,4 +85,60 @@ public class MealCategoryMeal {
     public void setDisplaySeq(final Integer displaySeq) {
         this.displaySeq = displaySeq;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    protected MealCategoryMeal(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        photo = (Object) in.readValue(Object.class.getClassLoader());
+        category = (CategoryMeal) in.readValue(CategoryMeal.class.getClassLoader());
+        servingSize = (ServingSize) in.readValue(ServingSize.class.getClassLoader());
+        description = in.readString();
+        if (in.readByte() == 0x01) {
+            addOnIds = new ArrayList<String>();
+            in.readList(addOnIds, String.class.getClassLoader());
+        } else {
+            addOnIds = null;
+        }
+        displaySeq = in.readByte() == 0x00 ? null : in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeValue(photo);
+        dest.writeValue(category);
+        dest.writeValue(servingSize);
+        dest.writeString(description);
+        if (addOnIds == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(addOnIds);
+        }
+        if (displaySeq == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(displaySeq);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<MealCategoryMeal> CREATOR = new Parcelable.Creator<MealCategoryMeal>() {
+        @Override
+        public MealCategoryMeal createFromParcel(Parcel in) {
+            return new MealCategoryMeal(in);
+        }
+
+        @Override
+        public MealCategoryMeal[] newArray(int size) {
+            return new MealCategoryMeal[size];
+        }
+    };
 }

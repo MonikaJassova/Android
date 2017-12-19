@@ -11,5 +11,13 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
+    <!-- A progress bar that will be shown to users to indicate that weather data is loading -->
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
 
 </RelativeLayout>
