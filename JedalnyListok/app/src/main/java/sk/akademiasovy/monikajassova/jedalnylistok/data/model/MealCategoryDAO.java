@@ -23,5 +23,5 @@ public interface MealCategoryDAO {
 
     // Inserts multiple mealcategories
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<MealCategory> mealCategories);
+    void bulkInsert(List<MealCategory> mealCategories);
 }

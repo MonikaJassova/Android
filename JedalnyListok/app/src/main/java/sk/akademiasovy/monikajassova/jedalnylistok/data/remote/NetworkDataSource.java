@@ -7,11 +7,16 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import sk.akademiasovy.monikajassova.jedalnylistok.AppExecutors;
-import sk.akademiasovy.monikajassova.jedalnylistok.AppJobService;
 import sk.akademiasovy.monikajassova.jedalnylistok.AppSyncIntentService;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoriesResponse;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
 
 /**
  * Created by monika.jassova on 12/19/2017.
@@ -38,14 +43,14 @@ public class NetworkDataSource {
         mContext = context;
         mExecutors = executors;
 
-        mDownloadedWeatherForecasts = new MutableLiveData<WeatherEntry[]>();
+        mDownloadedMealCategories = new MutableLiveData<List<MealCategory>>();
     }
 
     // LiveData storing the latest downloaded weather forecasts
-    private final MutableLiveData<WeatherEntry[]> mDownloadedWeatherForecasts;
+    private final MutableLiveData<List<MealCategory>> mDownloadedMealCategories;
 
-    public LiveData<WeatherEntry[]> getCurrentWeatherForecasts() {
-        return mDownloadedWeatherForecasts;
+    public LiveData<List<MealCategory>> getCurrentMCs() {
+        return mDownloadedMealCategories;
     }
 
     /**
@@ -65,7 +70,7 @@ public class NetworkDataSource {
     /**
      * Starts an intent service to fetch the weather.
      */
-    public void startFetchJLService() {
+    public void startFetchMCService() {
         Intent intentToFetch = new Intent(mContext, AppSyncIntentService.class);
         mContext.startService(intentToFetch);
         Log.d(LOG_TAG, "Service created");
@@ -74,54 +79,54 @@ public class NetworkDataSource {
     /**
      * Schedules a repeating job service which fetches the weather.
      */
-    public void scheduleRecurringFetchJLSync() {
-        Driver driver = new GooglePlayDriver(mContext);
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
-
-        // Create the Job to periodically sync Sunshine
-        Job syncSunshineJob = dispatcher.newJobBuilder()
-                /* The Service that will be used to sync Sunshine's data */
-                .setService(SunshineFirebaseJobService.class)
-                /* Set the UNIQUE tag used to identify this Job */
-                .setTag(SUNSHINE_SYNC_TAG)
-                /*
-                 * Network constraints on which this Job should run. We choose to run on any
-                 * network, but you can also choose to run only on un-metered networks or when the
-                 * device is charging. It might be a good idea to include a preference for this,
-                 * as some users may not want to download any data on their mobile plan. ($$$)
-                 */
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                /*
-                 * setLifetime sets how long this job should persist. The options are to keep the
-                 * Job "forever" or to have it die the next time the device boots up.
-                 */
-                .setLifetime(Lifetime.FOREVER)
-                /*
-                 * We want Sunshine's weather data to stay up to date, so we tell this Job to recur.
-                 */
-                .setRecurring(true)
-                /*
-                 * We want the weather data to be synced every 3 to 4 hours. The first argument for
-                 * Trigger's static executionWindow method is the start of the time frame when the
-                 * sync should be performed. The second argument is the latest point in time at
-                 * which the data should be synced. Please note that this end time is not
-                 * guaranteed, but is more of a guideline for FirebaseJobDispatcher to go off of.
-                 */
-                .setTrigger(Trigger.executionWindow(
-                        SYNC_INTERVAL_SECONDS,
-                        SYNC_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
-                /*
-                 * If a Job with the tag with provided already exists, this new job will replace
-                 * the old one.
-                 */
-                .setReplaceCurrent(true)
-                /* Once the Job is ready, call the builder's build method to return the Job */
-                .build();
-
-        // Schedule the Job with the dispatcher
-        dispatcher.schedule(syncSunshineJob);
-        Log.d(LOG_TAG, "Job scheduled");
-    }
+//    public void scheduleRecurringFetchJLSync() {
+//        Driver driver = new GooglePlayDriver(mContext);
+//        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
+//
+//        // Create the Job to periodically sync Sunshine
+//        Job syncSunshineJob = dispatcher.newJobBuilder()
+//                /* The Service that will be used to sync Sunshine's data */
+//                .setService(SunshineFirebaseJobService.class)
+//                /* Set the UNIQUE tag used to identify this Job */
+//                .setTag(SUNSHINE_SYNC_TAG)
+//                /*
+//                 * Network constraints on which this Job should run. We choose to run on any
+//                 * network, but you can also choose to run only on un-metered networks or when the
+//                 * device is charging. It might be a good idea to include a preference for this,
+//                 * as some users may not want to download any data on their mobile plan. ($$$)
+//                 */
+//                .setConstraints(Constraint.ON_ANY_NETWORK)
+//                /*
+//                 * setLifetime sets how long this job should persist. The options are to keep the
+//                 * Job "forever" or to have it die the next time the device boots up.
+//                 */
+//                .setLifetime(Lifetime.FOREVER)
+//                /*
+//                 * We want Sunshine's weather data to stay up to date, so we tell this Job to recur.
+//                 */
+//                .setRecurring(true)
+//                /*
+//                 * We want the weather data to be synced every 3 to 4 hours. The first argument for
+//                 * Trigger's static executionWindow method is the start of the time frame when the
+//                 * sync should be performed. The second argument is the latest point in time at
+//                 * which the data should be synced. Please note that this end time is not
+//                 * guaranteed, but is more of a guideline for FirebaseJobDispatcher to go off of.
+//                 */
+//                .setTrigger(Trigger.executionWindow(
+//                        SYNC_INTERVAL_SECONDS,
+//                        SYNC_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
+//                /*
+//                 * If a Job with the tag with provided already exists, this new job will replace
+//                 * the old one.
+//                 */
+//                .setReplaceCurrent(true)
+//                /* Once the Job is ready, call the builder's build method to return the Job */
+//                .build();
+//
+//        // Schedule the Job with the dispatcher
+//        dispatcher.schedule(syncSunshineJob);
+//        Log.d(LOG_TAG, "Job scheduled");
+//    }
 
     /**
      * Gets the newest weather
@@ -130,35 +135,29 @@ public class NetworkDataSource {
         Log.d(LOG_TAG, "Fetch meal categories started");
         mExecutors.networkIO().execute(() -> {
             try {
+                MealCategoryService mealCategoryService = ApiUtils.getMealCategoryService();
+                Call<MealCategoriesResponse> call = mealCategoryService.getMealCategories();
+                call.enqueue(new Callback<MealCategoriesResponse>() {
+                    @Override
+                    public void onResponse(Call<MealCategoriesResponse> call, Response<MealCategoriesResponse> response) {
+                        List<MealCategory> mc = response.body().getMealCategories();
+                        Log.d(LOG_TAG, "JSON Parsing finished");
+                        if (mc.size() != 0) {
+                            Log.d(LOG_TAG, "JSON not null and has " + mc.size() + " values");
+                            Log.d(LOG_TAG, "First value is: " + mc.get(0).getName());
+                            Log.d(LOG_TAG, "First meal is: " + mc.get(0).getMeals().get(0).getName());
 
-                // The getUrl method will return the URL that we need to get the forecast JSON for the
-                // weather. It will decide whether to create a URL based off of the latitude and
-                // longitude or off of a simple location as a String.
+                            // TODO Finish this method when instructed.
+                            // Will eventually do something with the downloaded data
+                            mDownloadedMealCategories.postValue(mc);
+                        }
+                    }
 
-                URL weatherRequestUrl = NetworkUtils.getUrl();
-
-                // Use the URL to retrieve the JSON
-                String jsonWeatherResponse = NetworkUtils.getResponseFromHttpUrl(weatherRequestUrl);
-
-                // Parse the JSON into a list of weather forecasts
-                WeatherResponse response = new OpenWeatherJsonParser().parse(jsonWeatherResponse);
-                Log.d(LOG_TAG, "JSON Parsing finished");
-
-
-                // As long as there are weather forecasts, update the LiveData storing the most recent
-                // weather forecasts. This will trigger observers of that LiveData, such as the
-                // SunshineRepository.
-                if (response != null && response.getWeatherForecast().length != 0) {
-                    Log.d(LOG_TAG, "JSON not null and has " + response.getWeatherForecast().length
-                            + " values");
-                    Log.d(LOG_TAG, String.format("First value is %1.0f and %1.0f",
-                            response.getWeatherForecast()[0].getMin(),
-                            response.getWeatherForecast()[0].getMax()));
-
-                    // TODO Finish this method when instructed.
-                    // Will eventually do something with the downloaded data
-                    mDownloadedWeatherForecasts.postValue(response.getWeatherForecast());
-                }
+                    @Override
+                    public void onFailure(Call<MealCategoriesResponse> call, Throwable t) {
+                        Log.e(LOG_TAG, t.toString());
+                    }
+                });
             } catch (Exception e) {
                 // Server probably invalid
                 e.printStackTrace();

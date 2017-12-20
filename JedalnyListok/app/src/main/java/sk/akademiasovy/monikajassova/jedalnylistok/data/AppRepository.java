@@ -3,7 +3,6 @@ package sk.akademiasovy.monikajassova.jedalnylistok.data;
 import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
-import java.util.Date;
 import java.util.List;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.AppExecutors;
@@ -48,19 +47,23 @@ public class AppRepository {
 
         // As long as the repository exists, observe the network LiveData.
         // If that LiveData changes, update the database.
-        LiveData<WeatherEntry[]> networkData = networkDataSource.getCurrentWeatherForecasts();
-        networkData.observeForever(newForecastsFromNetwork -> {
+        LiveData<List<MealCategory>> networkData = networkDataSource.getCurrentMCs();
+        networkData.observeForever(newMScFromNetwork -> {
             mExecutors.diskIO().execute(() -> {
                 // Deletes old historical data
                 deleteOldData();
                 Log.d(LOG_TAG, "Old JL deleted");
 
                 // Insert our new weather data into Sunshine's database
-                mealCategoryDAO.bulkInsert(newForecastsFromNetwork);
+                mealCategoryDAO.bulkInsert(newMScFromNetwork);
                 Log.d(LOG_TAG, "New values inserted");
             });
         });
 
+    }
+
+    private void startFetchMealCategoryService() {
+        networkDataSource.startFetchMCService();
     }
 
     /**
@@ -73,10 +76,10 @@ public class AppRepository {
         return mealCategoryDAO.getAll();
     }
 
-    public LiveData<WeatherEntry> getWeatherByDate(Date date){
-        initializeData();
-        return mealCategoryDAO.getWeatherByDate(date);
-    }
+//    public LiveData<WeatherEntry> getWeatherByDate(Date date){
+//        initializeData();
+//        return mealCategoryDAO.getWeatherByDate(date);
+//    }
 
     public synchronized static AppRepository getInstance(
             MealCategoryDAO mealCategoryDAO, MealDAO mealDAO, AddonDAO addonDAO,
@@ -103,15 +106,17 @@ public class AppRepository {
         if (mInitialized) return;
         mInitialized = true;
 
-        // This method call triggers Sunshine to create its task to synchronize weather data
-        // periodically.
-        networkDataSource.scheduleRecurringFetchJLSync();
+        startFetchMealCategoryService();
 
-        mExecutors.diskIO().execute(() -> {
-            if (isFetchNeeded()) {
-                startFetchJLService();
-            }
-        });
+//        // This method call triggers Sunshine to create its task to synchronize weather data
+//        // periodically.
+//        networkDataSource.scheduleRecurringFetchJLSync();
+//
+//        mExecutors.diskIO().execute(() -> {
+//            if (isFetchNeeded()) {
+//                startFetchMealCategoryService();
+//            }
+//        });
     }
 
     /**
@@ -131,18 +136,18 @@ public class AppRepository {
      *
      * @return Whether a fetch is needed
      */
-    private boolean isFetchNeeded() {
-//        Date today = SunshineDateUtils.getNormalizedUtcDateForToday();
-//        int count = mealCategoryDAO.countAllFutureWeather(today);
-//        return (count < NetworkDataSource.NUM_DAYS);
-    }
+//    private boolean isFetchNeeded() {
+////        Date today = SunshineDateUtils.getNormalizedUtcDateForToday();
+////        int count = mealCategoryDAO.countAllFutureWeather(today);
+////        return (count < NetworkDataSource.NUM_DAYS);
+//    }
 
     /**
      * Network related operation
      */
 
-//    private void startFetchJLService() {
-//        networkDataSource.startFetchJLService();
+//    private void startFetchMCService() {
+//        networkDataSource.startFetchMCService();
 //    }
 
 }

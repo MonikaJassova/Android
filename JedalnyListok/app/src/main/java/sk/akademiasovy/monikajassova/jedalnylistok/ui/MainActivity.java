@@ -74,14 +74,14 @@ public class MainActivity extends AppCompatActivity implements MealCategoryPersA
         MainViewModelFactory factory = InjectorUtils.provideMainActivityViewModelFactory(this.getApplicationContext());
         mViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
 
-        mViewModel.getMealCategories().observe(this, mealCategories -> {
-            mForecastAdapter.swapMealCategories(mealCategories);
+        mViewModel.getMealCategories().observe(this, newMealCategories -> {
+            mForecastAdapter.swapMealCategories(newMealCategories);
             if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
             mRecyclerView.smoothScrollToPosition(mPosition);
 
             // Show the weather list or the loading screen based on whether the forecast data exists
             // and is loaded
-            if (mealCategories != null && mealCategories.size() != 0) showMealCategoryDataView();
+            if (newMealCategories != null && newMealCategories.size() != 0) showMealCategoryDataView();
             else showLoading();
         });
 
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements MealCategoryPersA
             public void onResponse(Call<MealCategoriesResponse> call, Response<MealCategoriesResponse> response) {
                 List<MealCategory> mc = response.body().getMealCategories();
 //                mAdapter.updateAnswers(mc);
-                db.mealCategoryDAO().insertAll(mc);
+                db.mealCategoryDAO().bulkInsert(mc);
             }
 
             @Override
@@ -201,13 +201,13 @@ public class MainActivity extends AppCompatActivity implements MealCategoryPersA
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        adapter.onSaveInstanceState(outState);
+        //adapter.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        adapter.onRestoreInstanceState(savedInstanceState);
+        //adapter.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

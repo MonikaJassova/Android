@@ -7,6 +7,7 @@ import java.util.List;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.data.AppRepository;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.*;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
 
 /**
  * Created by monika.jassova on 12/19/2017.
