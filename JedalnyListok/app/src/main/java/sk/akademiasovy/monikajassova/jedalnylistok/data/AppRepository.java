@@ -3,6 +3,7 @@ package sk.akademiasovy.monikajassova.jedalnylistok.data;
 import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
+import java.util.Date;
 import java.util.List;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.AppExecutors;
@@ -106,17 +107,16 @@ public class AppRepository {
         if (mInitialized) return;
         mInitialized = true;
 
-        startFetchMealCategoryService();
-
 //        // This method call triggers Sunshine to create its task to synchronize weather data
 //        // periodically.
 //        networkDataSource.scheduleRecurringFetchJLSync();
 //
-//        mExecutors.diskIO().execute(() -> {
-//            if (isFetchNeeded()) {
-//                startFetchMealCategoryService();
-//            }
-//        });
+        mExecutors.diskIO().execute(() -> {
+            if (isFetchNeeded()) {
+                startFetchMealCategoryService();
+            }
+            else Log.d(LOG_TAG, "Fetch not needed.");
+        });
     }
 
     /**
@@ -127,8 +127,8 @@ public class AppRepository {
      * Deletes old weather data because we don't need to keep multiple days' data
      */
     private void deleteOldData() {
-//        Date today = SunshineDateUtils.getNormalizedUtcDateForToday();
-//        mealCategoryDAO.deleteOldWeather(today);
+        Date today = new Date();
+        mealCategoryDAO.deleteOldMealCategories(today);
     }
 
     /**
@@ -136,18 +136,19 @@ public class AppRepository {
      *
      * @return Whether a fetch is needed
      */
-//    private boolean isFetchNeeded() {
-////        Date today = SunshineDateUtils.getNormalizedUtcDateForToday();
-////        int count = mealCategoryDAO.countAllFutureWeather(today);
-////        return (count < NetworkDataSource.NUM_DAYS);
-//    }
+    private boolean isFetchNeeded() {
+//        Date today = SunshineDateUtils.getNormalizedUtcDateForToday();
+//        int count = mealCategoryDAO.countAllFutureWeather(today);
+//        return (count < NetworkDataSource.NUM_DAYS);
+        return false;
+    }
 
     /**
      * Network related operation
      */
 
-//    private void startFetchMCService() {
-//        networkDataSource.startFetchMCService();
-//    }
+    private void startFetchMCService() {
+        networkDataSource.startFetchMCService();
+    }
 
 }

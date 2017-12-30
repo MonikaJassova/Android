@@ -5,6 +5,9 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +28,8 @@ public class MealCategory {
     private String description;
     @Ignore
     private Integer displaySeq;
+    @JsonIgnore
+    private Date date;
 
     @Ignore
     public MealCategory(){
@@ -34,6 +39,7 @@ public class MealCategory {
     public MealCategory(String id, String name){
         this.id = id;
         this.name = name;
+        this.date = new Date();
     }
 
     @Ignore
@@ -92,5 +98,13 @@ public class MealCategory {
 
     public void setDisplaySeq(Integer displaySeq) {
         this.displaySeq = displaySeq;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

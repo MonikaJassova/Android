@@ -140,16 +140,21 @@ public class NetworkDataSource {
                 call.enqueue(new Callback<MealCategoriesResponse>() {
                     @Override
                     public void onResponse(Call<MealCategoriesResponse> call, Response<MealCategoriesResponse> response) {
-                        List<MealCategory> mc = response.body().getMealCategories();
-                        Log.d(LOG_TAG, "JSON Parsing finished");
-                        if (mc.size() != 0) {
-                            Log.d(LOG_TAG, "JSON not null and has " + mc.size() + " values");
-                            Log.d(LOG_TAG, "First value is: " + mc.get(0).getName());
-                            Log.d(LOG_TAG, "First meal is: " + mc.get(0).getMeals().get(0).getName());
+                        if(response.isSuccessful()) {
+                            List<MealCategory> mc = response.body().getMealCategories();
+                            Log.d(LOG_TAG, "JSON Parsing finished");
+                            if (mc.size() != 0) {
+                                Log.d(LOG_TAG, "JSON not null and has " + mc.size() + " values");
+                                Log.d(LOG_TAG, "First value is: " + mc.get(0).getName());
+                                Log.d(LOG_TAG, "First meal is: " + mc.get(0).getMeals().get(0).getName());
 
-                            // TODO Finish this method when instructed.
-                            // Will eventually do something with the downloaded data
-                            mDownloadedMealCategories.postValue(mc);
+                                // Will eventually do something with the downloaded data
+                                mDownloadedMealCategories.postValue(mc);
+                            }
+                        }else {
+                            int statusCode  = response.code();
+                            // handle request errors depending on status code
+                            Log.d(LOG_TAG, "Status code = "+String.valueOf(statusCode));
                         }
                     }
 

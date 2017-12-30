@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,4 +25,10 @@ public interface MealCategoryDAO {
     // Inserts multiple mealcategories
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void bulkInsert(List<MealCategory> mealCategories);
+
+    @Query("SELECT COUNT(id) FROM mealcategories WHERE date >= :date")
+    int countAllFutureWeather(Date date);
+
+    @Query("DELETE FROM mealcategories WHERE date < :date")
+    void deleteOldMealCategories(Date date);
 }
