@@ -18,6 +18,7 @@ import retrofit2.Response;
 import sk.akademiasovy.monikajassova.jedalnylistok.InjectorUtils;
 import sk.akademiasovy.monikajassova.jedalnylistok.R;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.AppDatabase;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.AppRepository;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.*;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.AddonCategoryService;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements MealCategoryPersA
     private MealCategoryAdapter mAdapter;
 
     private ProgressBar mLoadingIndicator;
-    private MealCategoryPersAdapter mForecastAdapter;
+    private MealCategoryPersAdapter mealCategoryPersAdapter;
     private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
     private MainActivityViewModel mViewModel;
@@ -67,15 +68,15 @@ public class MainActivity extends AppCompatActivity implements MealCategoryPersA
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mForecastAdapter = new MealCategoryPersAdapter(this, this);
+        mealCategoryPersAdapter = new MealCategoryPersAdapter(this, this);
 
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
-        mRecyclerView.setAdapter(mForecastAdapter);
+        mRecyclerView.setAdapter(mealCategoryPersAdapter);
         MainViewModelFactory factory = InjectorUtils.provideMainActivityViewModelFactory(this.getApplicationContext());
         mViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
 
         mViewModel.getMealCategories().observe(this, newMealCategories -> {
-            mForecastAdapter.swapMealCategories(newMealCategories);
+            mealCategoryPersAdapter.swapMealCategories(newMealCategories);
             if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
             mRecyclerView.smoothScrollToPosition(mPosition);
 
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements MealCategoryPersA
             if (newMealCategories != null && newMealCategories.size() != 0) showMealCategoryDataView();
             else showLoading();
         });
+
 
 
         /*RecyclerView recyclerView = (RecyclerView) findViewById(R.id.mealcategory_recyclerview);

@@ -127,8 +127,7 @@ public class AppRepository {
      * Deletes old weather data because we don't need to keep multiple days' data
      */
     private void deleteOldData() {
-        Date today = new Date();
-        mealCategoryDAO.deleteOldMealCategories(today);
+        mealCategoryDAO.deleteOldMealCategories();
     }
 
     /**
@@ -137,10 +136,8 @@ public class AppRepository {
      * @return Whether a fetch is needed
      */
     private boolean isFetchNeeded() {
-//        Date today = SunshineDateUtils.getNormalizedUtcDateForToday();
-//        int count = mealCategoryDAO.countAllFutureWeather(today);
-//        return (count < NetworkDataSource.NUM_DAYS);
-        return false;
+        Log.d(LOG_TAG, "Number of rows in DB: "+String.valueOf(mealCategoryDAO.rowCount()));
+        return mealCategoryDAO.rowCount() == 0;
     }
 
     /**

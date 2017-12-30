@@ -28,8 +28,6 @@ public class MealCategory {
     private String description;
     @Ignore
     private Integer displaySeq;
-    @JsonIgnore
-    private Date date;
 
     @Ignore
     public MealCategory(){
@@ -39,7 +37,6 @@ public class MealCategory {
     public MealCategory(String id, String name){
         this.id = id;
         this.name = name;
-        this.date = new Date();
     }
 
     @Ignore
@@ -100,11 +97,4 @@ public class MealCategory {
         this.displaySeq = displaySeq;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 }

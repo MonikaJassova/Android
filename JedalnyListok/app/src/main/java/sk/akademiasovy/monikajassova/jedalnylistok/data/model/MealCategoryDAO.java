@@ -26,9 +26,10 @@ public interface MealCategoryDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void bulkInsert(List<MealCategory> mealCategories);
 
-    @Query("SELECT COUNT(id) FROM mealcategories WHERE date >= :date")
-    int countAllFutureWeather(Date date);
+    @Query("DELETE FROM mealcategories")
+    void deleteOldMealCategories();
 
-    @Query("DELETE FROM mealcategories WHERE date < :date")
-    void deleteOldMealCategories(Date date);
+    @Query("SELECT count(id) FROM mealcategories")
+    int rowCount();
+
 }
