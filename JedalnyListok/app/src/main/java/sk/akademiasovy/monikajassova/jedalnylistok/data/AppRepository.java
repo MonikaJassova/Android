@@ -11,6 +11,8 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnCategoryDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddonDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryDAO;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryMeal;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryMealDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.NetworkDataSource;
 
@@ -25,6 +27,7 @@ public class AppRepository {
     private static final Object LOCK = new Object();
     private static AppRepository sInstance;
     private final MealCategoryDAO mealCategoryDAO;
+    private final MealCategoryMealDAO mealCategoryMealDAO;
     private final MealDAO mealDAO;
     private final AddonDAO addonDAO;
     private final AddOnCategoryDAO addOnCategoryDAO;
@@ -34,12 +37,14 @@ public class AppRepository {
 
 
     private AppRepository(MealCategoryDAO mealCategoryDAO,
+                               MealCategoryMealDAO mealCategoryMealDAO,
                                MealDAO mealDAO,
                                AddonDAO addonDAO,
                                AddOnCategoryDAO addOnCategoryDAO,
                                NetworkDataSource networkDataSource,
                                AppExecutors executors) {
         this.mealCategoryDAO = mealCategoryDAO;
+        this.mealCategoryMealDAO = mealCategoryMealDAO;
         this.addOnCategoryDAO = addOnCategoryDAO;
         this.mealDAO = mealDAO;
         this.addonDAO = addonDAO;
@@ -55,8 +60,11 @@ public class AppRepository {
                 deleteOldData();
                 Log.d(LOG_TAG, "Old JL deleted");
 
-                // Insert our new weather data into Sunshine's database
-                mealCategoryDAO.bulkInsert(newMScFromNetwork);
+                // Insert our new data into database
+                //mealCategoryDAO.bulkInsert(newMScFromNetwork);
+                for (MealCategory mc : newMScFromNetwork){
+                    mealCategoryDAO.insertMealCategoryWithMeals(mc);
+                }
                 Log.d(LOG_TAG, "New values inserted");
             });
         });
@@ -83,13 +91,13 @@ public class AppRepository {
 //    }
 
     public synchronized static AppRepository getInstance(
-            MealCategoryDAO mealCategoryDAO, MealDAO mealDAO, AddonDAO addonDAO,
+            MealCategoryDAO mealCategoryDAO, MealCategoryMealDAO mealCategoryMealDAO, MealDAO mealDAO, AddonDAO addonDAO,
             AddOnCategoryDAO addOnCategoryDAO, NetworkDataSource networkDataSource,
             AppExecutors executors) {
         Log.d(LOG_TAG, "Getting the repository");
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new AppRepository(mealCategoryDAO, mealDAO, addonDAO, addOnCategoryDAO, networkDataSource, executors);
+                sInstance = new AppRepository(mealCategoryDAO, mealCategoryMealDAO, mealDAO, addonDAO, addOnCategoryDAO, networkDataSource, executors);
                 Log.d(LOG_TAG, "Made new repository");
             }
         }
@@ -137,7 +145,8 @@ public class AppRepository {
      */
     private boolean isFetchNeeded() {
         Log.d(LOG_TAG, "Number of rows in DB: "+String.valueOf(mealCategoryDAO.rowCount()));
-        return mealCategoryDAO.rowCount() == 0;
+        return true;
+//        return mealCategoryDAO.rowCount() == 0;
     }
 
     /**

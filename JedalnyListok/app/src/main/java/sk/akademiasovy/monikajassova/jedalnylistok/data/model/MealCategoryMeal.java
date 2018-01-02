@@ -1,26 +1,65 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
  * Created by monika.jassova on 11/28/2017.
  */
 
+@Entity(tableName = "MCmeals", foreignKeys = @ForeignKey(entity = MealCategory.class,
+            parentColumns = "id",
+            childColumns = "categoryId",
+            onDelete = CASCADE))
 public class MealCategoryMeal implements Parcelable {
+    @PrimaryKey
+    @NonNull
     private String id;
     private String name;
+    @JsonIgnore
+    private String categoryId;
+    @Ignore
     private Object photo;
+    @Ignore
     private CategoryMeal category;
+    @Embedded
     private ServingSize servingSize;
+    @Ignore
     private String description;
+    @Ignore
     private List<String> addOnIds;
+    @Ignore
     private Integer displaySeq;
 
     public MealCategoryMeal(){}
+
+    public MealCategoryMeal(@NonNull String id, String name, String categoryId, ServingSize servingSize) {
+        this.id = id;
+        this.name = name;
+        this.categoryId = categoryId;
+        this.servingSize = servingSize;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
 
     public String getId() {
         return id;

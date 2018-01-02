@@ -13,7 +13,8 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddonDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.DBTypeConverter;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryDAO;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealWithAddonsDAO;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryMeal;
+import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryMealDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.Meal;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealDAO;
 
@@ -21,14 +22,14 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealDAO;
  * Created by monika.jassova on 11/29/2017.
  */
 
-@Database(entities = {MealCategory.class, Meal.class, AddOnCategory.class, Addon.class}, version = 1) //Entities listed here
+@Database(entities = {MealCategory.class, Meal.class, AddOnCategory.class, Addon.class, MealCategoryMeal.class}, version = 1) //Entities listed here
 @TypeConverters(DBTypeConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract MealCategoryDAO mealCategoryDAO();
     public abstract MealDAO mealDAO();
     public abstract AddOnCategoryDAO addOnCategoryDAO();
     public abstract AddonDAO addonDAO();
-    public abstract MealWithAddonsDAO mealWithAddonsDAO();
+    public abstract MealCategoryMealDAO mealCategoryMealDAO();
 
     private static final String DATABASE_NAME = "jedalnylistok";
 
@@ -41,7 +42,7 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 if (sInstance == null) {
                     sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, AppDatabase.DATABASE_NAME).build();
+                            AppDatabase.class, AppDatabase.DATABASE_NAME).allowMainThreadQueries().build();
                 }
             }
         }

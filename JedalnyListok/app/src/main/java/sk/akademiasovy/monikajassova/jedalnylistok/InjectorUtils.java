@@ -20,7 +20,7 @@ public class InjectorUtils {
         AppDatabase database = AppDatabase.getInstance(context.getApplicationContext());
         AppExecutors executors = AppExecutors.getInstance();
         NetworkDataSource networkDataSource = NetworkDataSource.getInstance(context.getApplicationContext(), executors);
-        return AppRepository.getInstance(database.mealCategoryDAO(), database.mealDAO(),
+        return AppRepository.getInstance(database.mealCategoryDAO(), database.mealCategoryMealDAO(), database.mealDAO(),
                 database.addonDAO(), database.addOnCategoryDAO(), networkDataSource, executors);
     }
 

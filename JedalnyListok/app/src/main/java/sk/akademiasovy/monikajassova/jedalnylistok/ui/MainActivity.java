@@ -82,7 +82,10 @@ public class MainActivity extends AppCompatActivity implements MealCategoryPersA
 
             // Show the weather list or the loading screen based on whether the forecast data exists
             // and is loaded
-            if (newMealCategories != null && newMealCategories.size() != 0) showMealCategoryDataView();
+            if (newMealCategories != null && newMealCategories.size() != 0){
+//                Log.d(TAG, newMealCategories.get(3).getMeals().get(0).getName());
+                showMealCategoryDataView();
+            }
             else showLoading();
         });
 
