@@ -3,7 +3,6 @@ package sk.akademiasovy.monikajassova.jedalnylistok.data;
 import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
-import java.util.Date;
 import java.util.List;
 
 import sk.akademiasovy.monikajassova.jedalnylistok.AppExecutors;
@@ -11,7 +10,6 @@ import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddOnCategoryDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.AddonDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategory;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryDAO;
-import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryMeal;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealCategoryMealDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.model.MealDAO;
 import sk.akademiasovy.monikajassova.jedalnylistok.data.remote.NetworkDataSource;
@@ -34,7 +32,6 @@ public class AppRepository {
     private final NetworkDataSource networkDataSource;
     private final AppExecutors mExecutors;
     private boolean mInitialized = false;
-
 
     private AppRepository(MealCategoryDAO mealCategoryDAO,
                                MealCategoryMealDAO mealCategoryMealDAO,
@@ -82,7 +79,7 @@ public class AppRepository {
     public LiveData<List<MealCategory>> getMealCategories() {
         initializeData();
         //Date today = SunshineDateUtils.getNormalizedUtcDateForToday();
-        return mealCategoryDAO.getAll();
+        return mealCategoryDAO.getAllWithMealsLive();
     }
 
 //    public LiveData<WeatherEntry> getWeatherByDate(Date date){

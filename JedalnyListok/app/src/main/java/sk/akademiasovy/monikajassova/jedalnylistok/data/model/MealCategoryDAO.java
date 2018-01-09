@@ -1,10 +1,14 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +20,8 @@ import java.util.List;
 
 @Dao
 public abstract class MealCategoryDAO {
+    private MediatorLiveData<List<MealCategory>> mMealCategoryLive = new MediatorLiveData<>();
+
     // Returns a list of all mealcategories in the database
     @Query("SELECT * FROM mealcategories")
     public abstract LiveData<List<MealCategory>> getAll();
@@ -64,12 +70,17 @@ public abstract class MealCategoryDAO {
         return mealCategory;
     }
 
-    public LiveData<List<MealCategory>> getAllWithMeals(){
+    public List<MealCategory> getAllWithMeals(){
         List<MealCategory> list = new ArrayList<>();
         for (String id : getMCIds()){
             list.add(getMealCategoryWithMeals(id));
         }
-        return null;
+        return list;
+    }
+
+    public LiveData<List<MealCategory>> getAllWithMealsLive() {
+        mMealCategoryLive.setValue(getAllWithMeals());
+        return mMealCategoryLive;
     }
 
 }

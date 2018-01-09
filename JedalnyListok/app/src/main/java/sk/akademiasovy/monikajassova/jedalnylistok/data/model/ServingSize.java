@@ -1,5 +1,6 @@
 package sk.akademiasovy.monikajassova.jedalnylistok.data.model;
 
+import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -16,6 +17,7 @@ public class ServingSize implements Parcelable {
         this.price = price;
     }
 
+    @Ignore
     public ServingSize(){}
 
     public String getSize() {

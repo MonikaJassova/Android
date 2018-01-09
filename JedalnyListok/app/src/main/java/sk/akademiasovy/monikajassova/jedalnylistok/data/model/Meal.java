@@ -4,6 +4,7 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -18,7 +19,9 @@ import java.util.List;
  * Created by monika.jassova on 11/29/2017.
  */
 
-@Entity(tableName = "meals", foreignKeys = @ForeignKey(entity = MealCategory.class, parentColumns = "id", childColumns = "categoryId"))
+@Entity(tableName = "meals",
+        indices = {@Index(value = "categoryId")},
+        foreignKeys = @ForeignKey(entity = MealCategory.class, parentColumns = "id", childColumns = "categoryId"))
 public class Meal implements Parcelable {
     @PrimaryKey
     @NonNull

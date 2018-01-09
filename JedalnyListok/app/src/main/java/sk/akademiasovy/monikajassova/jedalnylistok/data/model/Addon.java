@@ -29,6 +29,7 @@ public class Addon {
 
     }
 
+    @Ignore
     public Addon(String id, String name) {
         this.id = id;
         this.name = name;
